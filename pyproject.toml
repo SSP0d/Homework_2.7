@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "homework-2-7"
+version = "0.1.0"
+description = ""
+authors = ["Serhii Pidkopai <spodkopay@gmail.com>"]
+readme = "README.md"
+packages = [{include = "homework_2"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+sqlalchemy = "^2.0.0"
+alembic = "^1.9.2"
+psycopg2-binary = "^2.9.5"
+faker = "^16.6.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
