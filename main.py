@@ -60,7 +60,7 @@ def query_04():
     average = session.query(
         func.round(func.avg(Grade.grades), 2).label('avg_grade')
     ).select_from(Grade).one()
-    print(f'Середній бал на потоці:{average}')
+    print(f'Середній бал на потоці: {average[0]}')
 
 
 # Знайти які курси читає певний викладач.
@@ -238,8 +238,8 @@ def query_12(team_id: int, subject_id: int):
 if __name__ == '__main__':
     # query_01()
     # query_02(5)
-    query_03(5)
-    # query_04()
+    # query_03(5)
+    query_04()
     # query_05(2)
     # query_06(2)
     # query_07(2, 3)
