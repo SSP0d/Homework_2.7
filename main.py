@@ -64,19 +64,20 @@ def query_04():
 
 
 # Знайти які курси читає певний викладач.
-def query_5(teacher_id: int):
+def query_05(teacher_id: int):
     teacher_subjects = session.query(
         Teacher.name,
         Subject.subject_name,
     ).select_from(Subject).join(Teacher).filter(Teacher.id == teacher_id).all()
-
+    # print(teacher_subjects)
     subjects = []
-    student_name = ''
+    teacher = ''
     for result in teacher_subjects:
-        student_name = result[0]
+        teacher = result[0]
         subjects.append(result[1])
-    print({student_name: subjects})
-
+    n = '\n'
+    print(f'Викладач: {teacher}{n}Читає предмети: {subjects[0]}, {subjects[1]}')
+    # print(f'Викладач: {teacher} читає наступні предмети: f"[{el} for el in subjects]"')
 
 # Знайти список студентів у певній групі.
 def query_06(group_id: int):
@@ -239,8 +240,8 @@ if __name__ == '__main__':
     # query_01()
     # query_02(5)
     # query_03(5)
-    query_04()
-    # query_05(2)
+    # query_04()
+    query_05(5)
     # query_06(2)
     # query_07(2, 3)
     # query_08(4)
