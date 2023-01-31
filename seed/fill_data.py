@@ -34,7 +34,7 @@ def create_students():
 
 
 def create_teams():
-    for i in range(TEAMS):
+    for i in range(1, TEAMS+1):
         team = Team(
             team_name=f'team{i}'
         )
@@ -65,8 +65,8 @@ def create_subjects():
 
 
 if __name__ == '__main__':
-    create_teachers()
-    create_students()
-    create_teams()
-    create_grades()
-    create_subjects()
+    # create_teachers()
+    create_teams  ()
+    # create_students()
+    # create_subjects()
+    # create_grades()

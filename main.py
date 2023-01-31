@@ -1,4 +1,252 @@
-from sqlalchemy import create_engine
+from datetime import datetime
+
+from sqlalchemy import func, desc, and_
+
+from database.db import session
+from database.models import Subject, Student, Grade, Teacher, Team
 
 
-engine = create_engine('sqlite:///:memory:', echo=True)
+# Знайти 5 студентів із найбільшим середнім балом з усіх предметів.
+def query_01():
+    results = session.query(
+        Student.name,
+        func.round(func.avg(Grade.grades), 2).label('avg_grade')
+    ).select_from(Grade).join(Student).group_by(Student.id).order_by(desc('avg_grade')).limit(5).all()
+    print('5 cтудентів з найвищим середнім балом')
+    # i = 0
+    for result in results:
+        print(f'Студент: {result[1]}, Бал: {result[0]}')
+
+
+# Знайти студента із найвищим середнім балом з певного предмета.
+def query_02(subject_id: int):
+    student_avg_for_subject = session.query(
+        Student.name,
+        func.round(func.avg(Grade.grades), 2).label("avg_grade"),
+        Subject.subject_name
+    ).select_from(Grade).join(Student).join(Subject).filter(
+        Subject.id == subject_id
+    ).group_by(
+        Subject.id,
+        Student.id
+    ).order_by(
+        desc("avg_grade")
+    ).first()
+
+    result = []
+    for el in student_avg_for_subject:
+        result.append(str(el))
+    print(f'По предмету {result[2]} найвищій середній бал {result[1]} має {result[0]}')
+
+
+# Знайти середній бал у групах з певного предмета.
+def query_03(subject_id: int):
+    avg_grade = session.query(
+        Team.team_name,
+        func.round(func.avg(Grade.grades), 2).label("avg_grade"),
+        Subject.subject_name
+    ).select_from(Grade).join(Student).join(Team).join(Subject).filter(
+        Subject.id == subject_id
+    ).group_by(
+        Team.id,
+        Subject.id
+    ).order_by(
+        Team.id).all()
+    print(f'Середній бал в групах за предметом')
+    for el in avg_grade:
+        print(el)
+
+
+# Знайти середній бал на потоці (по всій таблиці оцінок).
+def query_04():
+    average = session.query(
+        func.round(func.avg(Grade.grades), 2).label('avg_grade')
+    ).select_from(Grade).one()
+    print(f'Середній бал на потоці:{average}')
+
+
+# Знайти які курси читає певний викладач.
+def query_5(teacher_id: int):
+    teacher_subjects = session.query(
+        Teacher.name,
+        Subject.subject_name,
+    ).select_from(Subject).join(Teacher).filter(Teacher.id == teacher_id).all()
+
+    subjects = []
+    student_name = ''
+    for result in teacher_subjects:
+        student_name = result[0]
+        subjects.append(result[1])
+    print({student_name: subjects})
+
+
+# Знайти список студентів у певній групі.
+def query_06(group_id: int):
+    students = session.query(
+        Student.name,
+        Team.team_name
+    ).select_from(Student).join(Team).filter(Team.id == group_id).all()
+
+    student_list = []
+    group_name = ''
+    for student in students:
+        student_list.append(student[0])
+        group_name = student[1]
+    print({group_name: student_list})
+
+
+# Знайти оцінки студентів у окремій групі з певного предмета.
+def query_7(subject_id: int, group_id: int):
+    grades = session.query(
+        Grade.grades,
+        Subject.subject_name,
+        Team.team_name
+    ).select_from(Grade).join(Subject).join(Student).join(Team).filter(and_(
+        Subject.id == subject_id,
+        Team.id == group_id
+    )).all()
+
+    all_grades = []
+    group = ''
+    subject = ''
+    for grade in grades:
+        all_grades.append(grade[0])
+        subject = grade[1]
+        group = grade[2]
+    print(f'Всі оцінки в групі {group} за предмет {subject}: {all_grades}')
+
+
+# Знайти середній бал, який ставить певний викладач зі своїх предметів.
+def query_08(teacher_id: int):
+    avg_grades = session.query(
+        func.round(func.avg(Grade.grades), 2).label('avg_grade'),
+        Teacher.name
+    ).select_from(Grade).join(Subject).join(Teacher).group_by(Teacher.name).filter(
+        Subject.teacher_id == teacher_id
+    ).all()
+
+    avg_grade = ''
+    teacher = ''
+    for result in avg_grades:
+        avg_grade = result[0]
+        teacher = result[1]
+    print(f'Середній бал у викладача {teacher}: {avg_grade}')
+
+
+# Знайти список курсів, які відвідує певний студент.
+def query_09(student_id: int):
+    courses = session.query(
+        Student.name,
+        Subject.subject_name
+    ).select_from(Student).join(Grade).join(Subject).filter(
+        Student.id == student_id
+    ).all()
+
+    student = ''
+    all_subjects = []
+    for result in courses:
+        student = result[0]
+        all_subjects.append(result[1])
+    print(f'Всі предмети, на які ходить {student}: {set(all_subjects)}')
+
+
+# Список курсів, які певному студенту читає певний викладач.
+def query_10(teacher_id: int, student_id: int):
+    courses = session.query(
+        Student.name,
+        Subject.subject_name,
+        Teacher.name
+    ).select_from(Student).join(Grade).join(Subject).join(Teacher).filter(and_(
+        Student.id == student_id,
+        Teacher.id == teacher_id
+    )).all()
+
+    all_subject = []
+    student = ''
+    teacher = ''
+    for result in courses:
+        student = result[0]
+        all_subject.append(result[1])
+        teacher = result[2]
+    print(f'Викладач {teacher} читає студенту {student} такі предмети: {set(all_subject)}')
+
+
+# Середній бал, який певний викладач ставить певному студентові.
+def query_11(student_id: int, teacher_id: int):
+    avg_grade = session.query(
+        Student.name,
+        func.round(func.avg(Grade.grades), 2).label("avg_grade"),
+        Teacher.name
+    ).select_from(Grade).join(Student).join(Subject).join(Teacher).filter(and_(
+        Student.id == student_id,
+        Teacher.id == teacher_id
+    )).group_by(
+        Student.id,
+        Teacher.id).all()
+
+    temp_list = []
+    for el in avg_grade:
+        for i in el:
+            temp_list.append(i)
+    print(f'Від викладача {temp_list[2]} студент {temp_list[0]} отримує середній бал {temp_list[1]}')
+
+
+# Оцінки студентів у певній групі з певного предмета на останньому занятті.
+def query_12(team_id: int, subject_id: int):
+    last_date = session.query(
+        Grade.lesson_date.label('t')
+    ).select_from(Grade).join(Student).join(Team).join(Subject).order_by((desc('t'))).filter(and_(
+        Team.id == team_id,
+        Subject.id == subject_id
+    )).first()
+
+    grades = session.query(
+        Team.team_name,
+        Grade.grades,
+        Subject.subject_name,
+        Grade.lesson_date.label('time')
+    ).select_from(Team).join(Student).join(Grade).join(Subject).order_by(
+        desc(Grade.lesson_date)).filter(and_(
+            Team.id == team_id,
+            Subject.id == subject_id,
+        )).all()
+
+    last_day = []
+    for el in grades:
+        day_edit = datetime.date(el[3]).strftime('%Y%m%d')
+        for day in last_date:
+            last_lesson = datetime.date(day).strftime('%Y%m%d')
+            if day_edit == last_lesson:
+                last_day.append(el)
+
+    team = ''
+    grades = []
+    subject = ''
+    date = ''
+
+    tuple_to_list = []
+    for el in last_day:
+        tuple_to_list.append([i for i in el])
+
+    for i in tuple_to_list:
+        team = i[0]
+        grades.append(i[1])
+        subject = i[2]
+        date = i[3]
+
+    print(f'На останньому занятті {datetime.date(date)} з предмету {subject} група {team} отримала оцінки:{grades}')
+
+
+if __name__ == '__main__':
+    query_01()
+    # query_02(7)
+    # query_03(5)
+    # query_04()
+    # query_05(2)
+    # query_06(2)
+    # query_07(2, 3)
+    # query_08(4)
+    # query_09(33)
+    # query_10(3, 23)
+    # query_11(34, 2)
+    # query_12(3, 7)

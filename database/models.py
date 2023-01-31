@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import DateTime
 
@@ -14,6 +13,7 @@ class Teacher(Base):
     name = Column(String(100), nullable=False)
 
     teachers = relationship("Subject", backref="teacher")
+
 
 class Student(Base):
     __tablename__ = "students"
@@ -48,4 +48,3 @@ class Subject(Base):
     teacher_id = Column(Integer, ForeignKey("teachers.id", ondelete="CASCADE"))
 
     grades = relationship("Grade", backref="subject")
-
