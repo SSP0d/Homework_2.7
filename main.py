@@ -35,7 +35,9 @@ def query_02(subject_id: int):
     result = []
     for el in student_avg:
         result.append(str(el))
-    print(f'Студент: {result[0]} має найвищій середній бал: {result[1]} по предмету: {result[2]}')
+    n = '\n'
+    print(f'{n}Студент із найвищим середнім балом')
+    print(f"Ім'я: {result[0]}{n}Cередній бал: {result[1]}{n}Предмет: {result[2]}")
 
 
 # Знайти середній бал у групах з певного предмета.
@@ -238,10 +240,10 @@ def query_12(team_id: int, subject_id: int):
 
 if __name__ == '__main__':
     # query_01()
-    # query_02(5)
+    query_02(5)
     # query_03(5)
     # query_04()
-    query_05(5)
+    # query_05(5)
     # query_06(2)
     # query_07(2, 3)
     # query_08(4)
