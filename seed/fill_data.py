@@ -7,10 +7,10 @@ from database.models import Teacher, Student, Team, Grade, Subject
 fake = Faker('uk_UA')
 
 TEACHERS = 5
-STUDENTS = 30
+STUDENTS = 50
 TEAMS = 3
-GRADES = 10
-SUBJECTS = 5
+GRADES = 20
+SUBJECTS = 8
 GROUPS = 3
 
 
@@ -36,7 +36,7 @@ def create_students():
 def create_teams():
     for i in range(1, TEAMS+1):
         team = Team(
-            team_name=f'team{i}'
+            team_name=f'Team 0{i}'
         )
         session.add(team)
     session.commit()
@@ -65,8 +65,8 @@ def create_subjects():
 
 
 if __name__ == '__main__':
-    # create_teachers()
-    create_teams  ()
-    # create_students()
-    # create_subjects()
-    # create_grades()
+    create_teachers()
+    create_subjects()
+    create_teams()
+    create_students()
+    create_grades()

@@ -12,15 +12,14 @@ def query_01():
         Student.name,
         func.round(func.avg(Grade.grades), 2).label('avg_grade')
     ).select_from(Grade).join(Student).group_by(Student.id).order_by(desc('avg_grade')).limit(5).all()
-    print('5 cтудентів з найвищим середнім балом')
-    # i = 0
+    print(f'5 cтудентів з найвищим середнім балом')
     for result in results:
-        print(f'Студент: {result[1]}, Бал: {result[0]}')
+        print(f'Студент: {result[0]}, Бал: {result[1]}')
 
 
 # Знайти студента із найвищим середнім балом з певного предмета.
 def query_02(subject_id: int):
-    student_avg_for_subject = session.query(
+    student_avg = session.query(
         Student.name,
         func.round(func.avg(Grade.grades), 2).label("avg_grade"),
         Subject.subject_name
@@ -34,10 +33,9 @@ def query_02(subject_id: int):
     ).first()
 
     result = []
-    for el in student_avg_for_subject:
+    for el in student_avg:
         result.append(str(el))
-    print(f'По предмету {result[2]} найвищій середній бал {result[1]} має {result[0]}')
-
+    print(f'Студент: {result[0]} має найвищій середній бал: {result[1]} по предмету: {result[2]}')
 
 # Знайти середній бал у групах з певного предмета.
 def query_03(subject_id: int):
@@ -96,7 +94,7 @@ def query_06(group_id: int):
 
 
 # Знайти оцінки студентів у окремій групі з певного предмета.
-def query_7(subject_id: int, group_id: int):
+def query_07(subject_id: int, group_id: int):
     grades = session.query(
         Grade.grades,
         Subject.subject_name,
@@ -238,8 +236,8 @@ def query_12(team_id: int, subject_id: int):
 
 
 if __name__ == '__main__':
-    query_01()
-    # query_02(7)
+    # query_01()
+    query_02(5)
     # query_03(5)
     # query_04()
     # query_05(2)
