@@ -37,6 +37,7 @@ def query_02(subject_id: int):
         result.append(str(el))
     print(f'Студент: {result[0]} має найвищій середній бал: {result[1]} по предмету: {result[2]}')
 
+
 # Знайти середній бал у групах з певного предмета.
 def query_03(subject_id: int):
     avg_grade = session.query(
@@ -50,9 +51,8 @@ def query_03(subject_id: int):
         Subject.id
     ).order_by(
         Team.id).all()
-    print(f'Середній бал в групах за предметом')
     for el in avg_grade:
-        print(el)
+        print(f'Група: {el[0]} має середній бал: {el[1]} за пердметом: {el[2]}')
 
 
 # Знайти середній бал на потоці (по всій таблиці оцінок).
@@ -237,8 +237,8 @@ def query_12(team_id: int, subject_id: int):
 
 if __name__ == '__main__':
     # query_01()
-    query_02(5)
-    # query_03(5)
+    # query_02(5)
+    query_03(5)
     # query_04()
     # query_05(2)
     # query_06(2)
