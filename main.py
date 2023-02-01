@@ -132,7 +132,7 @@ def query_08(teacher_id: int):
     for result in avg_grades:
         avg_grade = result[0]
         teacher = result[1]
-    print(f'Середній бал у викладача {teacher}: {avg_grade}')
+    print(f'Викладач: {teacher} ставить середній бал: {avg_grade}')
 
 
 # Знайти список курсів, які відвідує певний студент.
@@ -246,8 +246,8 @@ if __name__ == '__main__':
     # query_04()
     # query_05(5)
     # query_06(3)
-    query_07(5, 3)
-    # query_08(4)
+    # query_07(5, 3)
+    query_08(5)
     # query_09(33)
     # query_10(3, 23)
     # query_11(34, 2)
