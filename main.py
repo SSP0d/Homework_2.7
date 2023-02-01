@@ -239,7 +239,6 @@ def query_12(team_id: int, subject_id: int):
         Team.id == team_id,
         Subject.id == subject_id
     )).first()
-
     grades = session.query(
         Team.team_name,
         Grade.grades,
@@ -253,10 +252,10 @@ def query_12(team_id: int, subject_id: int):
 
     last_day = []
     for el in grades:
-        day_edit = datetime.date(el[3]).strftime('%Y%m%d')
+        lesson_date = datetime.date(el[3])
         for day in last_date:
-            last_lesson = datetime.date(day).strftime('%Y%m%d')
-            if day_edit == last_lesson:
+            last_lesson = datetime.date(day)
+            if lesson_date == last_lesson:
                 last_day.append(el)
 
     team = ''
@@ -264,17 +263,18 @@ def query_12(team_id: int, subject_id: int):
     subject = ''
     date = ''
 
-    tuple_to_list = []
-    for el in last_day:
-        tuple_to_list.append([i for i in el])
-
-    for i in tuple_to_list:
+    for i in last_day:
         team = i[0]
         grades.append(i[1])
         subject = i[2]
         date = i[3]
-
-    print(f'На останньому занятті {datetime.date(date)} з предмету {subject} група {team} отримала оцінки:{grades}')
+    n = '\n'
+    print(
+        f"{n}Група: {team}{n}"
+        f"Предмет: {subject}{n}"
+        f"Отримані оцінки: {', '.join(str(el) for el in grades)}{n}"
+        f"Дата останнього заняття: {datetime.date(date).strftime('%d.%m.%Y')}"
+    )
 
 
 if __name__ == '__main__':
@@ -288,5 +288,5 @@ if __name__ == '__main__':
     # query_08(5)
     # query_09(5)
     # query_10(5, 5)
-    query_11(5, 5)
-    # query_12(3, 7)
+    # query_11(5, 5)
+    query_12(3, 5)
