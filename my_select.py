@@ -7,7 +7,7 @@ from database.models import Subject, Student, Grade, Teacher, Team
 
 
 # Знайти 5 студентів із найбільшим середнім балом з усіх предметів.
-def query_01():
+def select_01():
     results = session.query(
         Student.name,
         func.round(func.avg(Grade.grades), 2).label('avg_grade')
@@ -20,7 +20,7 @@ def query_01():
 
 
 # Знайти студента із найвищим середнім балом з певного предмета.
-def query_02(subject_id: int):
+def select_02(subject_id: int):
     student_avg = session.query(
         Student.name,
         func.round(func.avg(Grade.grades), 2).label("avg_grade"),
@@ -46,7 +46,7 @@ def query_02(subject_id: int):
 
 
 # Знайти середній бал у групах з певного предмета.
-def query_03(subject_id: int):
+def select_03(subject_id: int):
     avg_grade = session.query(
         Team.team_name,
         func.round(func.avg(Grade.grades), 2).label("avg_grade"),
@@ -65,7 +65,7 @@ def query_03(subject_id: int):
 
 
 # Знайти середній бал на потоці (по всій таблиці оцінок).
-def query_04():
+def select_04():
     average = session.query(
         func.round(func.avg(Grade.grades), 2).label('avg_grade')
     ).select_from(Grade).one()
@@ -76,7 +76,7 @@ def query_04():
 
 
 # Знайти які курси читає певний викладач.
-def query_05(teacher_id: int):
+def select_05(teacher_id: int):
     teacher_subjects = session.query(
         Teacher.name,
         Subject.subject_name,
@@ -93,8 +93,9 @@ def query_05(teacher_id: int):
         f"Читає предмети: {', '.join([el for el in subjects])}"
     )
 
+
 # Знайти список студентів у певній групі.
-def query_06(group_id: int):
+def select_06(group_id: int):
     students = session.query(
         Student.name,
         Team.team_name
@@ -113,7 +114,7 @@ def query_06(group_id: int):
 
 
 # Знайти оцінки студентів у окремій групі з певного предмета.
-def query_07(subject_id: int, group_id: int):
+def select_07(subject_id: int, group_id: int):
     grades = session.query(
         Grade.grades,
         Subject.subject_name,
@@ -138,9 +139,8 @@ def query_07(subject_id: int, group_id: int):
     )
 
 
-
 # Знайти середній бал, який ставить певний викладач зі своїх предметів.
-def query_08(teacher_id: int):
+def select_08(teacher_id: int):
     avg_grades = session.query(
         func.round(func.avg(Grade.grades), 2).label('avg_grade'),
         Teacher.name
@@ -160,7 +160,7 @@ def query_08(teacher_id: int):
 
 
 # Знайти список курсів, які відвідує певний студент.
-def query_09(student_id: int):
+def select_09(student_id: int):
     courses = session.query(
         Student.name,
         Subject.subject_name
@@ -181,7 +181,7 @@ def query_09(student_id: int):
 
 
 # Список курсів, які певному студенту читає певний викладач.
-def query_10(teacher_id: int, student_id: int):
+def select_10(teacher_id: int, student_id: int):
     courses = session.query(
         Student.name,
         Subject.subject_name,
@@ -207,7 +207,7 @@ def query_10(teacher_id: int, student_id: int):
 
 
 # Середній бал, який певний викладач ставить певному студентові.
-def query_11(student_id: int, teacher_id: int):
+def select_11(student_id: int, teacher_id: int):
     avg_grade = session.query(
         Student.name,
         func.round(func.avg(Grade.grades), 2).label("avg_grade"),
@@ -232,7 +232,7 @@ def query_11(student_id: int, teacher_id: int):
 
 
 # Оцінки студентів у певній групі з певного предмета на останньому занятті.
-def query_12(team_id: int, subject_id: int):
+def select_12(team_id: int, subject_id: int):
     last_date = session.query(
         Grade.lesson_date.label('t')
     ).select_from(Grade).join(Student).join(Team).join(Subject).order_by((desc('t'))).filter(and_(
@@ -278,15 +278,15 @@ def query_12(team_id: int, subject_id: int):
 
 
 if __name__ == '__main__':
-    # query_01()
-    # query_02(5)
-    # query_03(5)
-    # query_04()
-    # query_05(5)
-    # query_06(3)
-    # query_07(5, 3)
-    # query_08(5)
-    # query_09(5)
-    # query_10(5, 5)
-    # query_11(5, 5)
-    query_12(3, 5)
+    # select_01()
+    # select_02(5)
+    # select_03(5)
+    # select_04()
+    # select_05(5)
+    # select_06(3)
+    # select_07(5, 3)
+    # select_08(5)
+    # select_09(5)
+    # select_10(5, 5)
+    # select_11(5, 5)
+    select_12(3, 5)
