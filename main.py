@@ -202,7 +202,8 @@ def query_10(teacher_id: int, student_id: int):
     print(
         f'{n}Викладач: {teacher}{n}'
         f'Студент: {student}{n}'
-        f'Предмети: {", ".join(el for el in subjects)}')
+        f'Предмети: {", ".join(el for el in subjects)}'
+    )
 
 
 # Середній бал, який певний викладач ставить певному студентові.
@@ -222,7 +223,12 @@ def query_11(student_id: int, teacher_id: int):
     for el in avg_grade:
         for i in el:
             temp_list.append(i)
-    print(f'Від викладача {temp_list[2]} студент {temp_list[0]} отримує середній бал {temp_list[1]}')
+    n = '\n'
+    print(
+        f'{n}Викладач: {temp_list[2]}{n}'
+        f'Студент: {temp_list[0]}{n}'
+        f'Отриманий середній бал: {temp_list[1]}'
+    )
 
 
 # Оцінки студентів у певній групі з певного предмета на останньому занятті.
@@ -281,6 +287,6 @@ if __name__ == '__main__':
     # query_07(5, 3)
     # query_08(5)
     # query_09(5)
-    query_10(5, 5)
-    # query_11(34, 2)
+    # query_10(5, 5)
+    query_11(5, 5)
     # query_12(3, 7)
