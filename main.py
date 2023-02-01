@@ -92,7 +92,8 @@ def query_06(group_id: int):
     for student in students:
         student_list.append(student[0])
         group_name = student[1]
-    print({group_name: student_list})
+    n = '\n'
+    print(f"Група: {group_name}{n}Студенти: {', '.join(el for el in student_list)}")
 
 
 # Знайти оцінки студентів у окремій групі з певного предмета.
@@ -113,7 +114,8 @@ def query_07(subject_id: int, group_id: int):
         all_grades.append(grade[0])
         subject = grade[1]
         group = grade[2]
-    print(f'Всі оцінки в групі {group} за предмет {subject}: {all_grades}')
+    n = '\n'
+    print(f'Група: {group}{n}Предмет: {subject}{n}Оцінки: {", ".join(str(el) for el in all_grades)}')
 
 
 # Знайти середній бал, який ставить певний викладач зі своїх предметів.
@@ -243,8 +245,8 @@ if __name__ == '__main__':
     # query_03(5)
     # query_04()
     # query_05(5)
-    query_06(2)
-    # query_07(2, 3)
+    # query_06(3)
+    query_07(5, 3)
     # query_08(4)
     # query_09(33)
     # query_10(3, 23)
