@@ -14,7 +14,9 @@ def query_01():
     ).select_from(Grade).join(Student).group_by(Student.id).order_by(desc('avg_grade')).limit(5).all()
     print(f'5 cтудентів з найвищим середнім балом')
     for result in results:
-        print(f'Студент: {result[0]}, Бал: {result[1]}')
+        print(
+            f'Студент: {result[0]} Бал: {result[1]}'
+        )
 
 
 # Знайти студента із найвищим середнім балом з певного предмета.
@@ -36,8 +38,11 @@ def query_02(subject_id: int):
     for el in student_avg:
         result.append(str(el))
     n = '\n'
-    print(f'{n}Студент із найвищим середнім балом')
-    print(f"Ім'я: {result[0]}{n}Cередній бал: {result[1]}{n}Предмет: {result[2]}")
+    print(
+        f"{n}Студент із найвищим середнім балом{n}"
+        f"Ім'я: {result[0]}{n}"
+        f"Cередній бал: {result[1]}{n}Предмет: {result[2]}"
+    )
 
 
 # Знайти середній бал у групах з певного предмета.
@@ -54,7 +59,9 @@ def query_03(subject_id: int):
     ).order_by(
         Team.id).all()
     for el in avg_grade:
-        print(f'Група: {el[0]} має середній бал: {el[1]} за пердметом: {el[2]}')
+        print(
+            f'Група: {el[0]} має середній бал: {el[1]} за пердметом: {el[2]}'
+        )
 
 
 # Знайти середній бал на потоці (по всій таблиці оцінок).
@@ -62,7 +69,10 @@ def query_04():
     average = session.query(
         func.round(func.avg(Grade.grades), 2).label('avg_grade')
     ).select_from(Grade).one()
-    print(f'Середній бал на потоці: {average[0]}')
+    n = '\n'
+    print(
+        f'{n}Середній бал на потоці: {average[0]}'
+    )
 
 
 # Знайти які курси читає певний викладач.
@@ -78,7 +88,10 @@ def query_05(teacher_id: int):
         teacher = result[0]
         subjects.append(result[1])
     n = '\n'
-    print(f"Викладач: {teacher}{n}Читає предмети: {', '.join([el for el in subjects])}")
+    print(
+        f"{n}Викладач: {teacher}{n}"
+        f"Читає предмети: {', '.join([el for el in subjects])}"
+    )
 
 # Знайти список студентів у певній групі.
 def query_06(group_id: int):
@@ -93,7 +106,10 @@ def query_06(group_id: int):
         student_list.append(student[0])
         group_name = student[1]
     n = '\n'
-    print(f"Група: {group_name}{n}Студенти: {', '.join(el for el in student_list)}")
+    print(
+        f"{n}Група: {group_name}{n}"
+        f"Студенти: {', '.join(el for el in student_list)}"
+    )
 
 
 # Знайти оцінки студентів у окремій групі з певного предмета.
@@ -115,7 +131,12 @@ def query_07(subject_id: int, group_id: int):
         subject = grade[1]
         group = grade[2]
     n = '\n'
-    print(f'Група: {group}{n}Предмет: {subject}{n}Оцінки: {", ".join(str(el) for el in all_grades)}')
+    print(
+        f'{n}Група: {group}{n}'
+        f'Предмет: {subject}{n}'
+        f'Оцінки: {", ".join(str(el) for el in all_grades)}'
+    )
+
 
 
 # Знайти середній бал, який ставить певний викладач зі своїх предметів.
@@ -132,7 +153,10 @@ def query_08(teacher_id: int):
     for result in avg_grades:
         avg_grade = result[0]
         teacher = result[1]
-    print(f'Викладач: {teacher} ставить середній бал: {avg_grade}')
+    n = '\n'
+    print(
+        f'{n}Викладач: {teacher} ставить середній бал: {avg_grade}'
+    )
 
 
 # Знайти список курсів, які відвідує певний студент.
@@ -145,11 +169,15 @@ def query_09(student_id: int):
     ).all()
 
     student = ''
-    all_subjects = []
+    subjects = []
     for result in courses:
         student = result[0]
-        all_subjects.append(result[1])
-    print(f'Всі предмети, на які ходить {student}: {set(all_subjects)}')
+        subjects.append(result[1])
+    n = '\n'
+    print(
+        f'{n}Студент: {student}{n}'
+        f'Відвідує заняття: {", ".join(el for el in subjects)}'
+    )
 
 
 # Список курсів, які певному студенту читає певний викладач.
@@ -163,14 +191,18 @@ def query_10(teacher_id: int, student_id: int):
         Teacher.id == teacher_id
     )).all()
 
-    all_subject = []
+    subjects = []
     student = ''
     teacher = ''
     for result in courses:
         student = result[0]
-        all_subject.append(result[1])
+        subjects.append(result[1])
         teacher = result[2]
-    print(f'Викладач {teacher} читає студенту {student} такі предмети: {set(all_subject)}')
+    n = '\n'
+    print(
+        f'{n}Викладач: {teacher}{n}'
+        f'Студент: {student}{n}'
+        f'Предмети: {", ".join(el for el in subjects)}')
 
 
 # Середній бал, який певний викладач ставить певному студентові.
@@ -247,8 +279,8 @@ if __name__ == '__main__':
     # query_05(5)
     # query_06(3)
     # query_07(5, 3)
-    query_08(5)
-    # query_09(33)
-    # query_10(3, 23)
+    # query_08(5)
+    # query_09(5)
+    query_10(5, 5)
     # query_11(34, 2)
     # query_12(3, 7)
